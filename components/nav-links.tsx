@@ -1,6 +1,7 @@
 'use client'
 
 import { HomeIcon, Receipt, PlusCircle } from "lucide-react"
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -22,6 +23,7 @@ const links = [
 
 export default function NavLinks() {
   const path = usePathname()
+  const { theme } = useTheme()
   return (
     <>
       {links.map((link) => {
@@ -30,7 +32,7 @@ export default function NavLinks() {
           <Link
             key={link.name}
             href={link.href}
-            className={`flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 px-4 py-2 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3 ${path === link.href ? 'bg-sky-100 text-blue-600' : ''} `}
+            className={`flex h-[48px] grow items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3 ${(path === link.href && theme === 'dark') ? 'bg-[#f8fafc]' : ''} `}
           >
             <LinkIcon className="w-6" />
             <p className="hidden md:block">{link.name}</p>

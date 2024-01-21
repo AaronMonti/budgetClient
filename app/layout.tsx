@@ -1,11 +1,16 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter as FontSans } from "next/font/google"
+import { cn } from '../lib/utils'
 import './globals.css'
 import SessionAuthProvider from '@/context/SessionAuthProvider'
 import { getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]/route'
+import { ThemeProvider } from '@/context/ThemeProvider'
 
-const inter = Inter({ subsets: ['latin'] })
+export const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -19,11 +24,16 @@ export default async function RootLayout({
 }) {
   const session = await getServerSession(authOptions)
   return (
-    <html lang="en" className={inter.className}>
-      <body className={inter.className}>
-        <SessionAuthProvider session={session}>
-          {children}
-        </SessionAuthProvider>
+    <html lang="es" suppressHydrationWarning>
+      <body className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}>
+        <ThemeProvider attribute='class' disableTransitionOnChange>
+          <SessionAuthProvider session={session}>
+            {children}
+          </SessionAuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

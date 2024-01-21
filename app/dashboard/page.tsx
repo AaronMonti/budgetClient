@@ -42,7 +42,7 @@ const Dashboard = async () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold pb-4 text-slate-900">Dashboard</h1>
+      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Dashboard</h1>
       <Card className="w-1/2">
         <CardHeader>
           <CardTitle>Monthly expenses</CardTitle>

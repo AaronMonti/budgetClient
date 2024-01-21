@@ -35,9 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
 import { useEffect, useState } from "react";
-import { redirect } from "next/dist/server/api-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
@@ -60,7 +58,6 @@ export type User = {
 
 export default function ExpenseForm() {
   const { data: session } = useSession()
-  console.log(session)
   const [users, setUsers] = useState<User[]>([])
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -214,8 +211,6 @@ export default function ExpenseForm() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     const session = await getServerSession(authOptions)
     const userId = session?.user?.userId
     await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/expense`, {
@@ -231,7 +226,5 @@ export default function ExpenseForm() {
           authorization: `Bearer ${session?.user?.token}`
         }
       })
-
-    console.log(values)
   }
 }
