@@ -27,11 +27,7 @@ export default function Navbar() {
         <div className="w-full flex flex-row-reverse items-center md:items-start md:flex-col justify-between">
           <ModeToggle />
           <div className='flex flex-row items-center gap-2'>
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <div className='text-foreground'>{session?.user?.name}</div>
+            <div className='text-foreground font-bold text-xl'>{session?.user?.name}</div>
           </div>
         </div>
       </div>
@@ -40,9 +36,9 @@ export default function Navbar() {
         <NavLinks />
         <div className="hidden h-auto w-full grow rounded-md md:block"></div>
         <form action={exitSession}>
-          <Button variant={"destructive"}>
-            <LogOut className="w-6" />
-            <div className="hidden md:block">Cerrar Sesion</div>
+          <Button variant={"destructive"} className="flex justify-start w-full text-left">
+            <LogOut className="w-5" />
+            <span className="p-2 hidden md:block">Cerrar Sesion</span>
           </Button>
         </form>
       </div>

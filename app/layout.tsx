@@ -6,6 +6,7 @@ import SessionAuthProvider from '@/context/SessionAuthProvider'
 import { getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]/route'
 import { ThemeProvider } from '@/context/ThemeProvider'
+import { getSession } from 'next-auth/react'
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -22,7 +23,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await getServerSession(authOptions as object)
+  const session = await getSession()
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={cn(

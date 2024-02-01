@@ -31,6 +31,9 @@ import {
 import { Input } from "@/components/ui/input"
 
 import { useState } from "react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
+import { Separator } from "./ui/separator"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -42,10 +45,11 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
-    []
-  )
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
 
   
 
@@ -66,11 +70,23 @@ export function DataTable<TData, TValue>({
     }
   })
 
+  function handleFilter(key: string, value: string) {
+    const params = new URLSearchParams(searchParams);
+
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+
+    router.replace(`${pathname}?${params.toString()}`);
+  }
+
   table.getState().pagination.pageSize = 10
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-start py-4">
         <Input
           placeholder="Buscar gastos..."
           value={(table.getColumn("description")?.getFilterValue() as string) ?? ""}
@@ -79,13 +95,14 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+        <Separator orientation="vertical" className="mx-2 h-4" />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline">
               Columnas
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="start">
             {table
               .getAllColumns()
               .filter(

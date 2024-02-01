@@ -17,28 +17,7 @@ import { ArrowUpDown, Trash2, Pencil, NotebookText } from "lucide-react"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { deleteExpense } from "@/lib/actions"
-import { Label } from "@/components/ui/label"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import UpdateExpense from "@/components/update-expense"
-import { Input } from "@/components/ui/input"
 
 export type Expense = {
   _id: string;
@@ -140,8 +119,6 @@ export const columns: ColumnDef<Expense>[] = [
     id: "actions",
     cell: ({ row }) => {
       const expense = row.original
-      const date = new Date(expense.date)
-      const formateDate = date.toLocaleDateString()
       return (
         <div>
           <div className="flex gap-3">

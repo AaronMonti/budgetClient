@@ -36,6 +36,13 @@ export function formatearFecha(date) {
   return fechaFormateada;
 }
 
+export function formatearMonto(monto) {
+  return new Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+    maximumFractionDigits: 2
+  }).format(monto)
+}
 
 export default function DetailsCard({ data }: CardProps) {
 
@@ -47,8 +54,8 @@ export default function DetailsCard({ data }: CardProps) {
           <CardDescription>{formatearFecha((data.date))}</CardDescription>
         </CardHeader>
         <CardContent>
-          <p>Monto gastado: {data.amount}</p>
-          <p>Monto por cada uno: {data.amountByParticipant}</p>
+          <p>Monto gastado: {formatearMonto(data.amount)}</p>
+          <p>Monto por participante: {formatearMonto(data.amountByParticipant)}</p>
         </CardContent>
         <CardFooter>
           <Badge>{data.category}</Badge>
