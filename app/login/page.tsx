@@ -2,8 +2,7 @@ import LoginForm from "@/components/login-form"
 
 export default function Login() {
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="px-5">
       <LoginForm />
     </div>
   )

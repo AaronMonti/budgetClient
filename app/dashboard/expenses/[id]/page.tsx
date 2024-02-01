@@ -5,11 +5,11 @@ import DetailsCard from '@/components/expense-details';
 
 
 export async function getExpense({ id }: { id: string }) { // Asegúrate de tener las opciones de autenticación necesarias
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions as object);
   try {
     const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/expense/${id}`, {
       headers: {
-        authorization: `Bearer ${session?.user?.token}`,
+        authorization: `Bearer ${session?.accessToken}`,
       },
     });
 
@@ -27,8 +27,8 @@ export default async function ExpenseDetails({ params }: { params: { id: string 
 
   return (
     <div>
+      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl pb-5">Detalles de gasto</h1>
       <DetailsCard data={data} />
-
     </div>
   )
 }

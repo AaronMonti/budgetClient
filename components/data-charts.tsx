@@ -23,7 +23,7 @@ ChartJS.register(
 export default function DataCharts ({ type, data, options, width, height }: ChartProps) {
   return (
     <div>
-      <Chart type={type} data={data} options={options} />
+      <Chart type={type} data={data} options={options} width={width} height={height} />
     </div>
   )
 }

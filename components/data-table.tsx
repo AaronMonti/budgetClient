@@ -72,7 +72,7 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
+          placeholder="Buscar gastos..."
           value={(table.getColumn("description")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("description")?.setFilterValue(event.target.value)
@@ -82,7 +82,7 @@ export function DataTable<TData, TValue>({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns
+              Columnas
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -145,7 +145,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  No hay registros.
                 </TableCell>
               </TableRow>
             )}
@@ -158,7 +158,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            Anterior
           </Button>
           <Button
             variant="outline"
@@ -166,7 +166,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            Siguiente
           </Button>
         </div>
       </div>

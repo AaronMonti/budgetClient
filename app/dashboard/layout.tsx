@@ -1,4 +1,5 @@
 import SideBar from "@/components/sidebar"
+import { Toaster } from "@/components/ui/sonner"
 
 export default function DashboardLayout({
   children,
@@ -10,7 +11,10 @@ export default function DashboardLayout({
       <div className="w-full flex-none md:w-64">
         <SideBar />
       </div>
-      <div className="grow p-6 md:overflow-y-auto md:p-12">{children}</div>
+      <div className="grow p-6 md:overflow-y-auto md:p-12">
+        {children}
+      </div>
+      <Toaster />
     </div>
   )
 }

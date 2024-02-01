@@ -3,15 +3,42 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { ArrowUpDown, Trash2, Pencil, NotebookText } from "lucide-react"
 import Link from "next/link"
+import { Badge } from "@/components/ui/badge"
+import { deleteExpense } from "@/lib/actions"
+import { Label } from "@/components/ui/label"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import UpdateExpense from "@/components/update-expense"
+import { Input } from "@/components/ui/input"
 
 export type Expense = {
   _id: string;
@@ -32,7 +59,7 @@ export const columns: ColumnDef<Expense>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Date
+          Fecha
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -51,7 +78,7 @@ export const columns: ColumnDef<Expense>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Description
+          Descripcion
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -59,11 +86,46 @@ export const columns: ColumnDef<Expense>[] = [
   },
   {
     accessorKey: "category",
-    header: "Category",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Categoria
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const category: string = row.getValue("category")
+      if (category === "Supermercado") {
+        return <Badge className="bg-red-700 font-medium">{category}</Badge>
+      }
+      if (category === "Verduleria") {
+        return <Badge className="bg-green-700 font-medium">{category}</Badge>
+      }
+      if (category === "Gustos") {
+        return <Badge className="bg-purple-700 font-medium">{category}</Badge>
+      }
+      else {
+        return <Badge className="font-medium">{category}</Badge>
+      }
+    }
   },
   {
     accessorKey: "amount",
-    header: "Amount",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Total
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"))
       const formateAmount = new Intl.NumberFormat("en-US", {
@@ -78,29 +140,37 @@ export const columns: ColumnDef<Expense>[] = [
     id: "actions",
     cell: ({ row }) => {
       const expense = row.original
- 
+      const date = new Date(expense.date)
+      const formateDate = date.toLocaleDateString()
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(expense._id)}
-            >
-              Copy expense ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem><Link href={`/dashboard/expenses/${expense._id}`}>View expense details</Link></DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div>
+          <div className="flex gap-3">
+            <Button className="h-8 w-8 p-0"><Link href={`/dashboard/expenses/${expense._id}`}><NotebookText className="h-5 w-5" /></Link></Button>
+
+            <UpdateExpense expense={expense} />
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button className="h-8 w-8 p-0" variant={"destructive"}><Trash2 className="h-5 w-5" /></Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Estas seguro?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta acción no se puede deshacer. Esto eliminará permanentemente el gasto.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="text-destructive hover:text-destructive">Cancelar</AlertDialogCancel>
+                  <AlertDialogAction className="bg-destructive hover:bg-destructive/90" onClick={() => deleteExpense(expense._id)}>Eliminar</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </div>
       )
     },
   },
+
 
 ];

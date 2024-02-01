@@ -8,7 +8,7 @@ import { getSession, useSession } from "next-auth/react"
 import { format } from "date-fns"
 import { es } from 'date-fns/locale';
 
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, CircleDollarSign } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -35,9 +35,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { toast } from "sonner"
 import { useEffect, useState } from "react";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const formSchema = z.object({
   description: z.string().min(3),
@@ -59,6 +58,22 @@ export type User = {
 export default function ExpenseForm() {
   const { data: session } = useSession()
   const [users, setUsers] = useState<User[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+
+  const showMessage = (message: string | null, type: "success" | "error") => {
+    setSuccess(message);
+    setError(null);
+  
+    if (message) {
+      const messageTimeout = setTimeout(() => {
+        setSuccess(null);
+      }, 3000);
+      clearTimeout(messageTimeout);
+    }
+  };
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -77,13 +92,14 @@ export default function ExpenseForm() {
       const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user`,
         {
           headers: {
-            authorization: `Bearer ${session?.user?.token}`
+            authorization: `Bearer ${session?.accessToken}`
           }
         })
       setUsers(res.data)
+      setIsLoading(false)
     }
     getUsers()
-  }, [])
+  }, [session])
 
   return (
     <Form {...form}>
@@ -198,33 +214,60 @@ export default function ExpenseForm() {
             <FormItem>
               <FormLabel>Monto</FormLabel>
               <FormControl>
-                <Input placeholder="Monto" type="number" {...field} />
+                <div className="relative flex items-center">
+                  <CircleDollarSign className="absolute left-2 text-gray-500" />
+                  <Input placeholder="Monto" type="number" {...field} className="pl-9" />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Crear</Button>
+{/*         <p className={`text-green-500 ${!success ? "hidden" : ""}`}>{success}</p>
+        <p className={`text-red-500 ${!error ? "hidden" : ""}`}>{error}</p> */}
       </form>
     </Form>
   )
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
     const userId = session?.user?.userId
-    await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/expense`, {
-      description: values.description,
-      date: values.date,
-      amount: values.amount,
-      category: values.category,
-      expenseOwner: userId,
-      participants: values.participants,
-    },
-      {
-        headers: {
-          authorization: `Bearer ${session?.user?.token}`
+    const datos = async () => {
+      try {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/expense`,
+          {
+            description: values.description,
+            date: values.date,
+            amount: values.amount,
+            category: values.category,
+            expenseOwner: userId,
+            participants: values.participants,
+          },
+          {
+            headers: {
+              authorization: `Bearer ${session?.accessToken}`,
+            },
+          }
+        );
+        return { success: true };
+      } catch (error) {
+        return { success: false, error };
+      }
+    };
+  
+    toast.promise(datos(), {
+      loading: 'Loading...',
+      success: (data) => {
+        if (data) {
+          return 'Expense has been added successfully';
         }
-      })
+      },
+      error: (error) => {
+        return 'Error adding expense';
+      },
+    });
   }
 }

@@ -5,12 +5,12 @@ import DataCharts from "@/components/data-charts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Dashboard = async () => {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession(authOptions as object)
 
   const monthlyExpenses = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reports/monthly-expenses`, {
     method: 'GET',
     headers: {
-      authorization: `Bearer ${session?.user?.token}`
+      authorization: `Bearer ${session?.accessToken}`
     },
   })
 
@@ -23,6 +23,7 @@ const Dashboard = async () => {
 
   const chartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
   }
 
   const labels = monthlyExpensesData.labels
@@ -33,22 +34,20 @@ const Dashboard = async () => {
       {
         label: 'Total',
         data: monthlyExpensesData.data,
-        backgroundColor: 'rgba(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
       }
     ]
   }
 
-  console.log(monthlyExpensesData.data)
-
   return (
     <div>
-      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Dashboard</h1>
-      <Card className="w-1/2">
+      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl pb-5">Resumen</h1>
+      <Card>
         <CardHeader>
-          <CardTitle>Monthly expenses</CardTitle>
+          <CardTitle>Gastado por mes</CardTitle>
         </CardHeader>
         <CardContent>
-          <DataCharts type={"bar"} data={chartData} options={chartOptions} />
+          <DataCharts type={"bar"} data={chartData} options={chartOptions} width={500} height={300} />
         </CardContent>
       </Card>
     </div>

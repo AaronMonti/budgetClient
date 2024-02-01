@@ -8,14 +8,14 @@ import { usePathname } from "next/navigation";
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: 'Home', href: '/dashboard', icon: HomeIcon },
+  { name: 'Inicio', href: '/dashboard', icon: HomeIcon },
   {
-    name: 'Expenses',
+    name: 'Gastos',
     href: '/dashboard/expenses',
     icon: Receipt,
   },
   {
-    name: 'Create Expense',
+    name: 'Crear gasto',
     href: '/dashboard/create-expense',
     icon: PlusCircle,
   },
@@ -28,12 +28,12 @@ export default function NavLinks() {
     <>
       {links.map((link) => {
         const LinkIcon = link.icon;
+        const className = `flex h-[48px] grow items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3 hover:bg-accent ${path === link.href ? 'bg-accent' : '' }`;
         return (
           <Link
             key={link.name}
             href={link.href}
-            className={`flex h-[48px] grow items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3 ${(path === link.href && theme === 'dark') ? 'bg-[#f8fafc]' : ''} `}
-          >
+            className={className}>
             <LinkIcon className="w-6" />
             <p className="hidden md:block">{link.name}</p>
           </Link>
