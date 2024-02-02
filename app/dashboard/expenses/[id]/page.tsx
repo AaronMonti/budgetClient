@@ -1,11 +1,11 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import axios from 'axios';
 import { getServerSession } from 'next-auth';
 import DetailsCard from '@/components/expense-details';
 
 
 export async function getExpense({ id }: { id: string }) { // Asegúrate de tener las opciones de autenticación necesarias
-  const session = await getServerSession(authOptions as object);
+  const session = await getServerSession(authOptions);
   try {
     const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/expense/${id}`, {
       headers: {

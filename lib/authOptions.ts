@@ -2,7 +2,7 @@ import axios from "axios";
 import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
-async function refreshAccessToken(token: any) {
+async function refreshAccessToken(token) {
   try {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/refresh`, {
       refreshToken: token.refreshToken,
@@ -55,7 +55,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: any) {
+    async jwt({ token, user }) {
       if (user) {
         token.accessToken = user.accessToken;
         token.accessTokenExpires = user.accessTokenExpires;
@@ -69,9 +69,9 @@ export const authOptions: NextAuthOptions = {
       // Access token has expired, try to update it
       return refreshAccessToken(token)
     },
-    async session({ session, token }: any) {
-      session.user = token.user as any
-      session.accessToken = token.accessToken as any
+    async session({ session, token }) {
+      session.user = token.user
+      session.accessToken = token.accessToken
       return session
     }
   },

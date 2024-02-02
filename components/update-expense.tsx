@@ -69,7 +69,6 @@ export default function UpdateExpense({ expense }: any) {
   const [users, setUsers] = useState<User[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -78,9 +77,10 @@ export default function UpdateExpense({ expense }: any) {
       amount: expense.amount !== undefined ? expense.amount.toString() : undefined,
       category: expense.category,
       expenseOwner: expense.expenseOwner,
-      participants: expense.participants[0]._id,
+      participants: expense.participants.length > 0 ? expense.participants[0]._id : [],
     },
   })
+
 
   useEffect(() => {
     const getUsers = async () => {

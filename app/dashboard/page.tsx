@@ -1,11 +1,11 @@
 import axios from "axios";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 import DataCharts from "@/components/data-charts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Dashboard = async () => {
-  const session = await getServerSession(authOptions as object)
+  const session = await getServerSession(authOptions)
 
   const monthlyExpenses = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reports/monthly-expenses`, {
     method: 'GET',

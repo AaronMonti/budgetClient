@@ -4,9 +4,8 @@ import { cn } from '../lib/utils'
 import './globals.css'
 import SessionAuthProvider from '@/context/SessionAuthProvider'
 import { getServerSession } from 'next-auth'
-import { authOptions } from './api/auth/[...nextauth]/route'
+import { authOptions } from '@/lib/authOptions'
 import { ThemeProvider } from '@/context/ThemeProvider'
-import { getSession } from 'next-auth/react'
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -23,7 +22,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await getSession()
+  const session = await getServerSession(authOptions)
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={cn(

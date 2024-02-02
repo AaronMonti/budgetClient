@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth"
-import { authOptions } from '../../api/auth/[...nextauth]/route'
+import { authOptions } from "@/lib/authOptions"
 import axios from "axios";
 import { DataTable } from "@/components/data-table";
 import { Expense, columns } from "./columns";
